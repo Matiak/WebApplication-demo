@@ -31,7 +31,7 @@ app.post("/tasks", (req, res) => {
 app.put("/tasks/:id", (req, res) => {
   const task = tasks.find(t => t.id == req.params.id);
   if (task) {
-    task.done = true;
+    task.done = !task.done;
     res.json(task);
   } else {
     res.status(404).json({ error: "Task not found" });
