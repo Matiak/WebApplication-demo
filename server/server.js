@@ -31,11 +31,25 @@ app.post("/tasks", (req, res) => {
 app.put("/tasks/:id", (req, res) => {
   const task = tasks.find(t => t.id == req.params.id);
   if (task) {
-    task.done = true;
+    task.done = !task.done;
     res.json(task);
   } else {
     res.status(404).json({ error: "Task not found" });
   }
+});
+
+// Remove all done tasks (requires password)
+app.delete("/tasks/done", (req, res) => {
+  const password = req.headers["x-admin-password"];
+  const correctPassword = process.env.ADMIN_PASSWORD;
+
+  if (!password || password !== correctPassword) {
+    return res.status(403).json({ error: "Invalid password" });
+  }
+
+  const beforeCount = tasks.length;
+  tasks = tasks.filter(t => !t.done);
+  res.json({ removed: beforeCount - tasks.length });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
