@@ -4,6 +4,11 @@ A simple fullstack app with:
 - Backend: Node.js + Express (in `server/`)
 - Frontend: HTML/CSS/JavaScript (in `client/`)
 
+## Deployed
+Backend is running on https://webapplication-demo.onrender.com
+
+Frontend is accessible on https://web-application-demo.vercel.app
+
 ## 🚀 Deploy Instructions
 
 ### Backend (Render)
