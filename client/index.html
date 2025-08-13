@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+  <script src="translations.js"></script>
 <html>
 
 <head>
@@ -22,16 +23,37 @@
 </head>
 
 <body>
-  <h1>Task Manager</h1>
+  <div id="langSwitcher" style="font-size: 1.5rem; cursor: pointer;">
+    <span onclick="setLanguage('en')">🇬🇧</span>
+    <span onclick="setLanguage('de')">🇩🇪</span>
+    <span onclick="setLanguage('sk')">🇸🇰</span>
+    <span onclick="setLanguage('cz')">🇨🇿</span>
+    <span onclick="setLanguage('pl')">🇵🇱</span>
+  </div>
+
+  <h1 id="title"></h1>
   <ul id="taskList"></ul>
 
-  <input type="text" id="taskInput" placeholder="New task">
-  <button onclick="addTask()">Add</button>
-  <button onclick="removeDone()">Remove Done Tasks</button>
-
+  <input type="text" id="taskInput">
+  <button id="addBtn" onclick="addTask()"></button>
+  <button id="removeBtn" onclick="removeDone()" title=""></button>
+</body>
   <script>
     const API_URL = "https://webapplication-demo.onrender.com/tasks"; // Backend address
 
+    let currentLang = "en";
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById("title").textContent = translations[lang].title;
+      document.getElementById("taskInput").placeholder = translations[lang].placeholder;
+      document.getElementById("addBtn").textContent = translations[lang].add;
+      document.getElementById("removeBtn").textContent = translations[lang].removeDone;
+      document.getElementById("removeBtn").title = translations[lang].removeTooltip;
+    }
+
+    // Initialize page with default language
+    document.addEventListener("DOMContentLoaded", () => setLanguage(currentLang));
     async function loadTasks() {
       const res = await fetch(API_URL);
       const tasks = await res.json();
@@ -84,6 +106,5 @@
 
     loadTasks();
   </script>
-</body>
 
 </html>
