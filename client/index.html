@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Task Manager Demo</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    li { margin: 5px 0; cursor: pointer; }
-    .done { text-decoration: line-through; color: gray; }
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    li {
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
   </style>
 </head>
+
 <body>
   <h1>Task Manager</h1>
   <ul id="taskList"></ul>
 
   <input type="text" id="taskInput" placeholder="New task">
   <button onclick="addTask()">Add</button>
+  <button onclick="removeDone()">Remove Done Tasks</button>
 
   <script>
     const API_URL = "https://webapplication-demo.onrender.com/tasks"; // Backend address
@@ -49,7 +63,27 @@
       loadTasks();
     }
 
+    async function removeDone() {
+      const password = prompt("Enter admin password:");
+      if (!password) return;
+
+      const res = await fetch(`${API_URL}/done`, {
+        method: "DELETE",
+        headers: {
+          "x-admin-password": password
+        }
+      });
+
+      if (res.ok) {
+        alert("Done tasks removed!");
+        loadTasks();
+      } else {
+        alert("Wrong password or error occurred.");
+      }
+    }
+
     loadTasks();
   </script>
 </body>
+
 </html>

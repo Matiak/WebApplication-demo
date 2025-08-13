@@ -38,4 +38,18 @@ app.put("/tasks/:id", (req, res) => {
   }
 });
 
+// Remove all done tasks (requires password)
+app.delete("/tasks/done", (req, res) => {
+  const password = req.headers["x-admin-password"];
+  const correctPassword = process.env.ADMIN_PASSWORD;
+
+  if (!password || password !== correctPassword) {
+    return res.status(403).json({ error: "Invalid password" });
+  }
+
+  const beforeCount = tasks.length;
+  tasks = tasks.filter(t => !t.done);
+  res.json({ removed: beforeCount - tasks.length });
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
