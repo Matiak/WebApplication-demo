@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Manager Demo</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    li { margin: 5px 0; cursor: pointer; }
+    .done { text-decoration: line-through; color: gray; }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+  <ul id="taskList"></ul>
+
+  <input type="text" id="taskInput" placeholder="New task">
+  <button onclick="addTask()">Add</button>
+
+  <script>
+    const API_URL = "https://your-backend-url.onrender.com/tasks"; // Change after deploy
+
+    async function loadTasks() {
+      const res = await fetch(API_URL);
+      const tasks = await res.json();
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+      tasks.forEach(task => {
+        const li = document.createElement("li");
+        li.textContent = task.title;
+        if (task.done) li.classList.add("done");
+        li.onclick = () => markDone(task.id);
+        list.appendChild(li);
+      });
+    }
+
+    async function addTask() {
+      const title = document.getElementById("taskInput").value;
+      if (!title) return;
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title })
+      });
+      document.getElementById("taskInput").value = "";
+      loadTasks();
+    }
+
+    async function markDone(id) {
+      await fetch(`${API_URL}/${id}`, { method: "PUT" });
+      loadTasks();
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>
